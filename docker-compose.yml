@@ -1,0 +1,10 @@
+version: '2.1'
+services:
+  nginx:
+    build: .
+    networks:
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external: true
