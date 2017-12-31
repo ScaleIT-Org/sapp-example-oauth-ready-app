@@ -4,7 +4,55 @@ services:
     build: .
     networks:
       - nginx-proxy
+      - internal
+
+  kong-database:
+    image: postgres:9.4-alpine
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+      - POSTGRES_PASSWORD=kong
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kong:
+    build: ./kong
+    depends_on:
+      kong-database:
+        condition: service_healthy
+    # restart: always
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+      - KONG_PG_DATABASE=kong
+      - KONG_PG_PASSWORD=kong
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+    links:
+      - kong-database:kong-database
+    volumes:
+      - ./kong-apis.json:/config/kong-apis.json:ro
+    networks:
+      - internal
+      - nginx-proxy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -I -s -L http://127.0.0.1:8000 || exit 1"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  db-data:
 
 networks:
+  internal:
   nginx-proxy:
     external: true
