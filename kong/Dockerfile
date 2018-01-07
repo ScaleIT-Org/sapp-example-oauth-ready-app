@@ -10,6 +10,7 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /
 
 RUN mkdir /config
 
+COPY apply-config.sh /apply-config.sh
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 

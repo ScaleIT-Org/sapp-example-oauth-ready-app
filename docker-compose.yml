@@ -36,7 +36,7 @@ services:
     links:
       - kong-database:kong-database
     volumes:
-      - ./kong-apis.json:/config/kong-apis.json:ro
+      - "./kong-apis.json:/config/kong-apis.json:ro"
     networks:
       - internal
       - nginx-proxy
