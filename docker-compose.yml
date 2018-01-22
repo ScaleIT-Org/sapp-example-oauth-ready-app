@@ -3,7 +3,6 @@ services:
   nginx:
     build: .
     networks:
-      - nginx-proxy
       - internal
 
   kong-database:
@@ -27,7 +26,10 @@ services:
     depends_on:
       kong-database:
         condition: service_healthy
-    # restart: always
+    restart: always
+    ports:
+      - 8000:8000
+      - 8001:8001
     environment:
       - KONG_DATABASE=postgres
       - KONG_PG_HOST=kong-database
@@ -39,7 +41,6 @@ services:
       - "./kong-apis.json:/config/kong-apis.json:ro"
     networks:
       - internal
-      - nginx-proxy
     healthcheck:
       test: ["CMD-SHELL", "curl -I -s -L http://127.0.0.1:8000 || exit 1"]
       interval: 5s
@@ -50,5 +51,3 @@ volumes:
 
 networks:
   internal:
-  nginx-proxy:
-    external: true
