@@ -35,7 +35,7 @@ services:
       - KONG_PG_DATABASE=kong
       - KONG_PG_PASSWORD=kong
     volumes:
-      - "./kong-apis.json:/config/kong-apis.json:ro"
+      - ${PWD}/kong-apis.json:/config/kong-apis.json
     networks:
       - internal
     healthcheck:
