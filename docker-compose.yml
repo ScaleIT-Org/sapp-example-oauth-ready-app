@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.3'
 services:
   nginx:
     build: .
@@ -24,8 +24,7 @@ services:
   kong:
     image: teco/kong-sidecar:0.12.1-0
     depends_on:
-      kong-database:
-        condition: service_healthy
+      - kong-database
     restart: always
     ports:
       - 8000:8000
@@ -35,8 +34,6 @@ services:
       - KONG_PG_HOST=kong-database
       - KONG_PG_DATABASE=kong
       - KONG_PG_PASSWORD=kong
-    links:
-      - kong-database:kong-database
     volumes:
       - "./kong-apis.json:/config/kong-apis.json:ro"
     networks:
