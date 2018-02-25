@@ -1,0 +1,7 @@
+apis:
+  - name: Example_Frontend
+    attributes:
+      upstream_url: http://nginx
+      uris:
+        - /example
+      preserve_host: true

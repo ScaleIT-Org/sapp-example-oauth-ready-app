@@ -1,8 +1,0 @@
-[
-    {
-        "name": "Example_Frontend",
-        "uris": "/example",
-        "upstream_url": "http://nginx",
-        "preserve_host": true
-    }
-]
